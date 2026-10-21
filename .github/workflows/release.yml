@@ -1,0 +1,18 @@
+# On a version tag (v1.0.0…), builds the ROM, checks it and attaches it to the release.
+name: release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y z80asm
+      - run: make check dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/pv-1000_control_test.zip
